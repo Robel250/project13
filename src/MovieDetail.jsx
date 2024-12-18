@@ -1,18 +1,18 @@
+
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import axios from "axios";
 
 export default function MovieDetail() {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    fetch(
-      `https://api.themoviedb.org/3/movie/${id}?api_key=6ae226b01962ce4699cebf75d825eebe`
-    )
-      .then((response) => response.json())
-      .then((data) => setMovie(data))
+    axios
+      .get(`https://api.themoviedb.org/3/movie/${id}?api_key=6ae226b01962ce4699cebf75d825eebe`)
+      .then((response) => setMovie(response.data))
       .catch(() => alert("Failed to fetch movie details"))
       .finally(() => setLoading(false));
   }, [id]);

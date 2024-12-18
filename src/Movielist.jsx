@@ -1,9 +1,8 @@
 
-
-
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Search from "./Search";
+import axios from "axios";
 
 export default function Movielist() {
   const [movies, setMovies] = useState([]);
@@ -12,12 +11,13 @@ export default function Movielist() {
 
   const fetchMovies = (query) => {
     setLoading(true);
-    fetch(
-      `https://api.themoviedb.org/3/search/movie?api_key=6ae226b01962ce4699cebf75d825eebe&query=${query}`
-    )
-      .then((response) => response.json())
-      .then((data) => setMovies(data.results || []))
-      .catch(() => <p>Failed to fetch data</p>)
+    axios
+      .get(`https://api.themoviedb.org/3/search/movie?api_key=6ae226b01962ce4699cebf75d825eebe&query=${query}`)
+      .then((response) => setMovies(response.data.results || []))
+      .catch((error) => {
+        console.error("Failed to fetch data", error);
+        setMovies([]);
+      })
       .finally(() => setLoading(false));
   };
 
